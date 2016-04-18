@@ -57,6 +57,13 @@ module Elasticsearch
             self
           end
 
+          def filter(*args, &block)
+            @hash[name][:filter] ||= []
+            value = Query.new(*args, &block).to_hash
+            @hash[name][:filter].push(value).flatten! unless @hash[name][:filter].include?(value)
+            self
+          end
+
           def to_hash
             @hash[name].update(@args.to_hash) if @args.respond_to?(:to_hash)
 
